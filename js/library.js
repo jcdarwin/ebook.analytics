@@ -1,4 +1,4 @@
-// Filename: book.js
+// Filename: library.js
 
 define([
   'jquery',
