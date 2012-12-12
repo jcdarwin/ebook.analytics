@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Analytics: Books</title>
+        <!-- This is a special version of jQuery with RequireJS built-in -->
+        <script data-main="js/main" src="js/lib/require-jquery.js"></script>
+
+        <style type="text/css">
+            .book {
+                float: left;
+                width: 150px;
+                height: 200px;
+                border: 1px solid #000;
+                margin-right: 20px;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="content"></div>
+
+        <script type="text/template" id="library_header_template">
+            <h1>Library</h1>
+        </script>
+
+        <script type="text/template" id="library_book_template">
+          <div class="library_book_container">
+              <div class="book">
+                <% if (typeof(title) !== 'undefined') { %>
+                    <p class="caption"><a href="#book/<%= book %>"><%= title %></a></p>
+                <% } %>
+              </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="book_header_template">
+            <% if (typeof(title) !== 'undefined') { %>
+                <h2><%= title %></h2>
+            <% } %>
+        </script>
+
+        <script type="text/template" id="book_template">
+          <div class="book_container">
+              <div class="book">
+                <% if (typeof(title) != 'undefined') { %>
+                    <p class="caption"><a href="#book/<%= book %>/analytics"><%= title %></a></p>
+                <% } %>
+              </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="analytic_header_template">
+            <h1>Analytics</h1>
+        </script>
+
+        <script type="text/template" id="analytic_subheader_template">
+            <h3>Milestones</h3>
+        </script>
+
+        <script type="text/template" id="analytic_template">
+          <div class="analytic_container">
+              <div class="analytic_thumbnail">
+                <% if (typeof(milestone) !== 'undefined') { %>
+                    <p class="caption"><%= milestone %></p>
+                <% } %>
+              </div>
+            </div>
+        </script>
+
+    </body>
+</html>
