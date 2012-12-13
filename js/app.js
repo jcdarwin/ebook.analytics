@@ -5,18 +5,20 @@ define([
   'library',
   'book',
   'analytic',
+  'milestone',
   'underscore',
   'backbone'
-], function($, Library, Book, Analytic){
+], function($, Library, Book, Analytic, Milestone){
   var initialize = function(){
 
     /* Define our router */
     /* Note that we only need to worry about #routes */
     var Router = Backbone.Router.extend({
         routes: {
-            ''                      : 'library',
-            'book/:book'            : 'book',
-            'book/:book/analytics'  : 'analytics'
+            ''                                : 'library',
+            'book/:book'                      : 'book',
+            'book/:book/analytics'            : 'analytics',
+            'book/:book/analytics/milestones' : 'milestones'
         },
         library: function(){
             var libraryView = new Library.LibraryBooksView();
@@ -26,6 +28,9 @@ define([
         },
         analytics: function(book){
             var analyticsView = new Analytic.AnalyticsView(book);
+        },
+        milestones: function(book){
+            var milestonesView = new Milestone.MilestonesView(book);
         }
     });
 

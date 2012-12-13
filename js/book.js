@@ -16,6 +16,9 @@ define([
     /* Define our collection */
     var Books = Backbone.Collection.extend({
         model: Book,
+        url: function(id){
+            return 'http://localhost:8001/book/' + id;
+        },
         options: {},
         initialize: function(models, options){
             this.options = options;
@@ -36,11 +39,7 @@ define([
             return $.ajax(params);
         },
         parse: function(response) {
-            return response.rows;
-        },
-        url: function(id){
-            // return 'http://localhost:28017/local/analytics/?filter_book=' + this.get('book');
-            return 'http://localhost:28017/local/books/?filter_book=' + id;
+            return response;
         }
         });
 

@@ -68,5 +68,19 @@
             </div>
         </script>
 
+        <script type="text/template" id="milestone_template">
+          <div class="milestone_container">
+              <div class="milestone_thumbnail" style="clear:both;">
+                <% if (typeof(milestone) !== 'undefined') { %>
+                    <div style="float:left;border:1px solid;width:200px;height:50px;background-color:red;"><%= complete * 100 %>
+                        <div style=<%= "border:1px;width:" + complete * 100 + "%;height:50px;background-color:blue;" %>>
+                        </div>
+                    </div>
+                    <p class="caption" style="float:left;"><%= milestone %> <%= count %> <%= users %> <%= description %></p>
+                <% } %>
+              </div>
+            </div>
+        </script>
+
     </body>
 </html>
