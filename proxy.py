@@ -96,7 +96,7 @@ def get_book_analytics(book):
 
 
 @route('/book/<book>/analytics/milestones/', method='GET')
-def get_book_analytics_summary(book):
+def get_book_analytics_milestones(book):
     # We want to return the count of each milestone for this book
     # and express this as a % of the total users.
     # Therefore, we need to:
@@ -121,6 +121,28 @@ def get_book_analytics_summary(book):
     else:
         # Not the most elegant sorting in python -- we should be doing a map-reduce but it hurts my head
         entity = sorted(entity, key=operator.itemgetter('milestone'))
+    return entity
+
+
+@route('/book/<book>/analytics/milestone/<milestone>', method='GET')
+def get_book_analytics_milestones_summary(book, milestone):
+
+    # Determine the number of distinct users
+    # http://stackoverflow.com/questions/11782566/mongodb-select-countdistinct-x-on-an-indexed-column-count-unique-results-for
+    pipeline = [{'$group': {'_id': "$user"}}, {'$group': {'_id': 1, 'count': {'$sum': 1}}}]
+    total_users = db.command('aggregate', 'analytics', pipeline=pipeline)
+    users = total_users['result'][0]['count']
+
+    # Determine the count for the supplied  milestone
+    entity = db['analytics'].group(['milestone', 'description'], {'book': int(book), 'milestone': int(milestone)}, {'count': 0, 'users': users, 'complete': 0}, 'function(obj, prev){prev.count++;prev.complete=prev.count/prev.users;}')
+    if not entity:
+        # No analytics for the supplied milestone -- detemrine the milestone information
+        # and return a result indicating 0% complete
+        entity = db['milestones'].find_one({'book': int(book), 'milestone': int(milestone)})
+        if not entity:
+            abort(404, 'No analytics for book id %s' % book)
+        else:
+            entity = [{"count": 1.0, "milestone": int(milestone), "users":  int(users), "complete": 0, "description": entity['description']}]
     return entity
 
 

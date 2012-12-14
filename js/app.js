@@ -31,6 +31,8 @@ define([
         },
         milestones: function(book){
             var milestonesHeaderView = new Milestone.MilestonesHeaderView(book);
+            var milestonesDonut7View = new Milestone.MilestonesDonutsView(book, 7);
+            var milestonesDonut8View = new Milestone.MilestonesDonutsView(book, 8);
             var milestonesView = new Milestone.MilestonesView(book);
         }
     });

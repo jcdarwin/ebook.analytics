@@ -83,8 +83,6 @@
 
         <div id="header"></div>
 
-        <div id="pvcPie1"></div>
-
         <div id="content"></div>
 
         <script type="text/template" id="library_header_template">
@@ -135,9 +133,8 @@
         </script>
 
         <script type="text/template" id="analytic_overview_template">
-            <h3>Overview</h3>
-            <div class="btcf">
-                <%= make_pie() %>
+            <div style="float:left;">
+                <%= make_pie('pvcPie' + milestone, description, [["Completed book", complete * 100], ["Not completed", 100 - (complete * 100) ]]) %>
             </div>
         </script>
 

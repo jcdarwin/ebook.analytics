@@ -118,6 +118,8 @@ function add_analytics(db_milestones) {
         {user: 2, book: 1, milestone: 4, milestone_id: db_milestones[11]._id, description: db_milestones[11].description, value: 1, date: new Date()},
         {user: 2, book: 1, milestone: 5, milestone_id: db_milestones[12]._id, description: db_milestones[12].description, value: 1, date: new Date()},
         {user: 2, book: 1, milestone: 6, milestone_id: db_milestones[13]._id, description: db_milestones[13].description, value: 1, date: new Date()},
+        {user: 2, book: 1, milestone: 7, milestone_id: db_milestones[14]._id, description: db_milestones[14].description, value: 1, date: new Date()},
+        {user: 2, book: 1, milestone: 8, milestone_id: db_milestones[15]._id, description: db_milestones[15].description, value: 1, date: new Date()},
 
         // Detect depth of scroll in the page
         {user: 2, book: 2, milestone: 1, milestone_id: db_milestones[8]._id, description: db_milestones[8].description, value: 1, date: new Date()},
