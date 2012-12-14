@@ -4,6 +4,7 @@
 # http://myadventuresincoding.wordpress.com/2011/01/02/creating-a-rest-api-in-python-using-bottle-and-mongodb/
 import bottle
 import pymongo
+import operator
 
 from pymongo import Connection
 from bottle import route, run, request, response, abort
@@ -71,9 +72,18 @@ def get_books():
 
 @route('/book/<book>', method='GET')
 def get_book(book):
+
     entity = db['books'].find_one({'book': int(book)})
     if not entity:
         abort(404, 'No book with book id %s' % book)
+
+    # Determine the number of distinct users
+    # http://stackoverflow.com/questions/11782566/mongodb-select-countdistinct-x-on-an-indexed-column-count-unique-results-for
+    pipeline = [{'$group': {'_id': "$user"}}, {'$group': {'_id': 1, 'count': {'$sum': 1}}}]
+    total_users = db.command('aggregate', 'analytics', pipeline=pipeline)
+    users = total_users['result'][0]['count']
+
+    entity['users'] = users
     return entity
 
 
@@ -108,7 +118,9 @@ def get_book_analytics_summary(book):
     entity = db['analytics'].group(['milestone', 'description'], {'book': int(book)}, {'count': 0, 'users': users, 'complete': 0}, 'function(obj, prev){prev.count++;prev.complete=prev.count/prev.users;}')
     if not entity:
         abort(404, 'No analytics for book id %s' % book)
-
+    else:
+        # Not the most elegant sorting in python -- we should be doing a map-reduce but it hurts my head
+        entity = sorted(entity, key=operator.itemgetter('milestone'))
     return entity
 
 
@@ -122,7 +134,7 @@ if __name__ == '__main__':
     install(JSONAPIPlugin())
     connection = Connection('localhost', 27017)
     db = connection['local']
-    run(host='localhost', port=8001)
+    run(host='localhost', port=8001, reloader=True)
 
 #print dumps(db['books'].find({}))
 #print dumps(db['books'].find_one({'book': 1}))

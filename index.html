@@ -5,15 +5,78 @@
         <!-- This is a special version of jQuery with RequireJS built-in -->
         <script data-main="js/main" src="js/lib/require-jquery.js"></script>
 
+
+    <script type="text/javascript" src="js/lib/cdf/Base.js"></script>
+    <script type="text/javascript" src="js/lib/protovis-d3.3.js"></script>
+
+    <script type="text/javascript" src="js/lib/pvc/pvc.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcDataDimension.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcDataTranslator.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcData.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcAbstract.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcBaseChart.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcBasePanel.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcTitlePanel.js"></script>
+    <script type="text/javascript" src="js/lib/pvc/pvcPieChart.js"></script>
+
         <style type="text/css">
+            /* http://www.colorcombos.com/color-schemes/422/ColorCombo422.html */
+            @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,200italic,300italic,400italic,700italic);
+            a {
+                text-decoration: none;
+            }
             .book {
                 float: left;
                 width: 150px;
-                height: 200px;
+                height: 223px;
                 border: 1px solid #000;
                 margin-right: 20px;
                 padding: 10px;
             }
+            .book_details td {
+                padding-right: 10px;
+            }
+            body{
+                font-family: 'Source Sans Pro', sans-serif;
+                font-weight: 300;
+            }
+            strong.percentage{
+                color: #fff;
+                font-weight: 600;
+            }
+        
+            /* http://lea.verou.me/2010/12/checkered-stripes-other-background-patterns-with-css3-gradients/ */
+            .angled {
+                background-color:#d6a354;
+                background-image: -webkit-gradient(linear, 0 100%, 100% 0,
+                                        color-stop(.25, rgba(255, 255, 255, .2)), color-stop(.25, transparent),
+                                        color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .2)),
+                                        color-stop(.75, rgba(255, 255, 255, .2)), color-stop(.75, transparent),
+                                        to(transparent));
+                background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,
+                                    transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,
+                                    transparent 75%, transparent);
+                background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,
+                                    transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,
+                                    transparent 75%, transparent);
+                background-image: -ms-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,
+                                    transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,
+                                    transparent 75%, transparent);
+                background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,
+                                    transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,
+                                    transparent 75%, transparent);
+                background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,
+                                    transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,
+                                    transparent 75%, transparent);
+                -webkit-background-size: 50px 50px;
+                -moz-background-size: 50px 50px;
+                background-size: 50px 50px;
+        } 
+        .btcf:after {
+            content:"";
+            display:table;
+            clear:both;
+        }       
         </style>
     </head>
     <body>
@@ -27,6 +90,7 @@
         <script type="text/template" id="library_book_template">
           <div class="library_book_container">
               <div class="book">
+                <a href="#book/<%= book %>"><img src=<%= "img/" + book + ".jpg" %>></a>
                 <% if (typeof(title) !== 'undefined') { %>
                     <p class="caption"><a href="#book/<%= book %>"><%= title %></a></p>
                 <% } %>
@@ -36,16 +100,28 @@
 
         <script type="text/template" id="book_header_template">
             <% if (typeof(title) !== 'undefined') { %>
-                <h2><%= title %></h2>
+                <h2><%= title %>
+                <% if (typeof(users) !== 'undefined') { %>
+                    (<%= users %> users)
+                <% } %>
+                </h2>
             <% } %>
         </script>
 
         <script type="text/template" id="book_template">
           <div class="book_container">
               <div class="book">
+                <a href="#book/<%= book %>/analytics/milestones"><img src=<%= "img/" + book + ".jpg" %>></a>
+              </div>
+              <div class="book_details">
+                <table>
                 <% if (typeof(title) != 'undefined') { %>
-                    <p class="caption"><a href="#book/<%= book %>/analytics"><%= title %></a></p>
+                    <tr><td>Title:</td><td><a href="#book/<%= book %>/analytics/milestones"><%= title %></a></td></tr>
                 <% } %>
+                <% if (typeof(author) != 'undefined') { %>
+                    <tr><td>Author:</td><td><%= author %></td></tr>
+                <% } %>
+                </table>
               </div>
             </div>
         </script>
@@ -54,7 +130,18 @@
             <h1>Analytics</h1>
         </script>
 
-        <script type="text/template" id="analytic_subheader_template">
+        <script type="text/template" id="analytic_overview_template">
+            <h3>Overview</h3>
+            <div class="btcf">
+                <%= make_pie() %>
+                <div class="donut" style="float:left;width:200px;height:200px;border:1px;border-style:solid;">
+                </div>
+                <div class="donut" style="float:left;width:200px;height:200px;border:1px;border-style:solid;">
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="analytic_subheader_milestones_template">
             <h3>Milestones</h3>
         </script>
 
@@ -69,14 +156,17 @@
         </script>
 
         <script type="text/template" id="milestone_template">
-          <div class="milestone_container">
-              <div class="milestone_thumbnail" style="clear:both;">
+          <div class="milestone_container" style="clear:both;width:100%;height:50px;margin-bottom:20px;">
+              <div class="milestone_thumbnail">
                 <% if (typeof(milestone) !== 'undefined') { %>
-                    <div style="float:left;border:1px solid;width:200px;height:50px;background-color:red;"><%= complete * 100 %>
-                        <div style=<%= "border:1px;width:" + complete * 100 + "%;height:50px;background-color:blue;" %>>
-                        </div>
-                    </div>
-                    <p class="caption" style="float:left;"><%= milestone %> <%= count %> <%= users %> <%= description %></p>
+                        <a href="#" title=<%= '"' + count + ' users have reached this milestone"' %>>
+                            <div class="angled" style="float:left;border:0px solid;width:200px;border-radius:10px;">
+                                <div style=<%= "border:0px;width:" + complete * 100 + "%;height:50px;background-color:#a84a5c;border-radius:10px;box-sizing:border-box;padding:15px;" %>>
+                                    <strong class="percentage"><%= complete * 100 %>%</strong>
+                                </div>
+                            </div>
+                        </a>
+                    <p class="caption" style="float:left;margin-left:10px;"><%= description %></p>
                 <% } %>
               </div>
             </div>

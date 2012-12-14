@@ -65,9 +65,59 @@ define([
         render: function(){
             var that = this;
             that.$el.prepend( _.template( $('#analytic_header_template').html() ) );
-            that.$el.append( _.template( $('#analytic_subheader_template').html() ) );
-            _.each(this.collection.models, function(analytic){
-                var template = _.template( $('#milestone_template').html(), analytic.toJSON() );
+
+            data = {};
+
+            // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
+            var viewHelpers = {
+                make_pie: function(){
+                    var pie = new pvc.PieChart({
+                      canvas: "pvcPie",
+                      width: 400,
+                      height: 400,
+                      title: "Completed reading",
+                      titlePosition: "bottom",
+                      legend: false,
+                      showTooltips: false,
+                      innerGap: 0.8,
+                      showValues: true,
+                    
+                      extensionPoints: {
+                        pie_innerRadius:70,
+                        titleLabel_font: "18px sans-serif"
+                      }
+                    });
+
+                    var data = {
+                      "resultset":[
+                          ["Green",74],
+                          ["Bender",41]
+                      ],
+                      "metadata":[{
+                        "colIndex":0,
+                        "colType":"String",
+                        "colName":"Categories"
+                      },{
+                        "colIndex":1,
+                        "colType":"Numeric",
+                        "colName":"Value"
+                      }]
+                    };
+
+                    pie.setData($.extend(true, {},data),
+                        {crosstabMode: false,
+                         seriesInRows: false});
+                    pie.render();
+                }
+            };
+
+            _.extend(data, viewHelpers);
+
+            that.$el.append( _.template( $('#analytic_overview_template').html(), data ) );
+
+            that.$el.append( _.template( $('#analytic_subheader_milestones_template').html() ) );
+            _.each(this.collection.models, function(milestone){
+                var template = _.template( $('#milestone_template').html(), milestone.toJSON() );
                 that.$el.append(template);
             }, this);
         },

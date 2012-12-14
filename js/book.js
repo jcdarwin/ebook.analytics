@@ -86,8 +86,8 @@ define([
         render: function(){
             var that = this;
             _.each(this.collection.models, function(book){
-                var template = _.template( $('#book_template').html(), book.toJSON() );
-                that.$el.append(template);
+                that.$el.append( _.template( $('#book_header_template').html(), book.toJSON() ) );
+                that.$el.append( _.template( $('#book_template').html(), book.toJSON() ) );
             }, this);
         },
         events: {

@@ -35,11 +35,9 @@ define([
             return $.ajax(params);
         },
         parse: function(response) {
-            return _.map(response, function(a){
-                return $.parseJSON(a);
-            });
+            return response;
         }
-        });
+    });
 
     /* Define our view */
     var LibraryBooksView = Backbone.View.extend({
