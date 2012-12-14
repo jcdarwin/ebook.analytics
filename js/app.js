@@ -30,6 +30,7 @@ define([
             var analyticsView = new Analytic.AnalyticsView(book);
         },
         milestones: function(book){
+            var milestonesHeaderView = new Milestone.MilestonesHeaderView(book);
             var milestonesView = new Milestone.MilestonesView(book);
         }
     });

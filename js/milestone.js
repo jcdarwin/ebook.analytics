@@ -46,9 +46,11 @@ define([
         }
         });
 
-    /* Define our view */
-    var MilestonesView = Backbone.View.extend({
-        el: $('#content'),
+    /* Define our header view */
+    // Note that although $el='#header', the donuts will
+    // actually get added to canvas: "pvcPie1" */
+    var MilestonesHeaderView = Backbone.View.extend({
+        el: $('#header'),
         initialize: function(book) {
             var bookHeaderView = new Book.BookHeaderView(book);
             _.bindAll(this, 'render');
@@ -65,14 +67,13 @@ define([
         render: function(){
             var that = this;
             that.$el.prepend( _.template( $('#analytic_header_template').html() ) );
-
             data = {};
 
             // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
             var viewHelpers = {
                 make_pie: function(){
                     var pie = new pvc.PieChart({
-                      canvas: "pvcPie",
+                      canvas: "pvcPie1",
                       width: 400,
                       height: 400,
                       title: "Completed reading",
@@ -112,9 +113,29 @@ define([
             };
 
             _.extend(data, viewHelpers);
-
             that.$el.append( _.template( $('#analytic_overview_template').html(), data ) );
+        },
+        events: {
+        }
+    });
 
+    /* Define our content view */
+    var MilestonesView = Backbone.View.extend({
+        el: $('#content'),
+        initialize: function(book) {
+            _.bindAll(this, 'render');
+            this.$el.empty();
+            this.collection = new Milestones( {}, {book: book} );
+            // Fetch the collection and call render() method
+            var that = this;
+            this.collection.fetch({
+            success: function (s) {
+                that.render();
+            }
+            });
+        },
+        render: function(){
+            var that = this;
             that.$el.append( _.template( $('#analytic_subheader_milestones_template').html() ) );
             _.each(this.collection.models, function(milestone){
                 var template = _.template( $('#milestone_template').html(), milestone.toJSON() );
@@ -126,6 +147,7 @@ define([
     });
 
   return {
+    MilestonesHeaderView: MilestonesHeaderView,
     MilestonesView: MilestonesView
   };
 });

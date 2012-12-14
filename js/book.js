@@ -43,9 +43,9 @@ define([
         }
         });
 
-    /* Define our views */
+    /* Define our header view */
     var BookHeaderView = Backbone.View.extend({
-        el: $('#content'),
+        el: $('#header'),
         initialize: function(id) {
             _.bindAll(this, 'render');
             this.$el.empty();
@@ -69,6 +69,7 @@ define([
         }
     });
 
+    /* Define our content view */
     var BookView = Backbone.View.extend({
         el: $('#content'),
         initialize: function(id) {
