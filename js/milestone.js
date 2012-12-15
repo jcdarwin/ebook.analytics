@@ -209,9 +209,9 @@ define([
         }
     });
 
-    /* Define our content view */
+    /* Define our milestones view */
     var MilestonesView = Backbone.View.extend({
-        el: $('#content'),
+        el: $('#milestones'),
         initialize: function(book) {
             _.bindAll(this, 'render');
             this.$el.empty();

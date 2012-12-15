@@ -25,6 +25,7 @@ define([
         },
         book: function(book){
             var bookView = new Book.BookView(book);
+            var milestonesDonut7View = new Milestone.MilestonesDonutsView(book, 8);
         },
         analytics: function(book){
             var analyticsView = new Analytic.AnalyticsView(book);
