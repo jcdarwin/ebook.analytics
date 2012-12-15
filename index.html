@@ -5,20 +5,6 @@
         <!-- This is a special version of jQuery with RequireJS built-in -->
         <script data-main="js/main" src="js/lib/require-jquery.js"></script>
 
-
-    <script type="text/javascript" src="js/lib/cdf/Base.js"></script>
-    <script type="text/javascript" src="js/lib/protovis-d3.3.js"></script>
-
-    <script type="text/javascript" src="js/lib/pvc/pvc.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcDataDimension.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcDataTranslator.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcData.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcAbstract.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcBaseChart.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcBasePanel.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcTitlePanel.js"></script>
-    <script type="text/javascript" src="js/lib/pvc/pvcPieChart.js"></script>
-
         <style type="text/css">
             /* http://www.colorcombos.com/color-schemes/422/ColorCombo422.html */
             @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,200italic,300italic,400italic,700italic);
@@ -83,6 +69,8 @@
 
         <div id="header"></div>
 
+        <div id="donuts" class="btcf"></div>
+
         <div id="content"></div>
 
         <script type="text/template" id="library_header_template">
@@ -133,9 +121,7 @@
         </script>
 
         <script type="text/template" id="analytic_overview_template">
-            <div style="float:left;">
-                <%= make_pie('pvcPie' + milestone, description, [["Completed book", complete * 100], ["Not completed", 100 - (complete * 100) ]]) %>
-            </div>
+            <%= make_donut(400, complete * users, users, 'donut_' + milestone, description, "#17BDCB", "#F2F2F2", 'Source Sans Pro') %>
         </script>
 
         <script type="text/template" id="analytic_subheader_milestones_template">

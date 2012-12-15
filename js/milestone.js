@@ -3,6 +3,7 @@
 define([
   'jquery',
   'book',
+  'raphael',
   'underscore',
   'backbone'
 ], function($, Book){
@@ -106,7 +107,7 @@ define([
 
     /* Define our donut view */
     var MilestonesDonutsView = Backbone.View.extend({
-        el: $('#content'),
+        el: $('#donuts'),
         initialize: function(book, milestone) {
             _.bindAll(this, 'render');
             this.$el.empty();
@@ -123,44 +124,77 @@ define([
             var that = this;
 
             // Render the donut charts
+            // http://blog.andyleclair.com/post/18022594090/raphael-js-donut-chart
             // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
             var viewHelpers = {
-                make_pie: function(pieName, description, resultset){
-                    that.$el.append('<div id="' + pieName + '"></div>');
-                    var pie = new pvc.PieChart({
-                      canvas: pieName,
-                      width: 400,
-                      height: 400,
-                      title: description,
-                      titlePosition: "bottom",
-                      legend: false,
-                      showTooltips: false,
-                      innerGap: 0.8,
-                      showValues: true,
-                    
-                      extensionPoints: {
-                        pie_innerRadius:70,
-                        titleLabel_font: "18px sans-serif"
+                make_donut: function(size, num, total, target, description, outerColor, innerColor, font){
+                  that.$el.append('<div id="' + target + '" style="float:left;"></div>');
+                  var outerFill = { stroke: outerColor, fill: outerColor };
+                  var innerFill = { stroke: innerColor, fill: innerColor };
+                  var greenFill = { stroke: '#FFAABB', fill: '#FFAABB' };
+                  var r = Raphael(target, size, size),
+                      halfSize = (size / 2),
+                      outerSize = halfSize - (halfSize / 4),
+                      arcSize = halfSize * 0.585,
+                      bigTxtSize = halfSize * 0.275,
+                      smallTxtSize = halfSize * 0.125,
+                      percentage = Math.round((num / total) * 100),
+                      numVsTotal = num + "/" + total,
+                      param = {
+                          stroke: "#fff",
+                          "stroke-width": halfSize * 0.30
+                      };
+                  r.customAttributes.arc = function(value, total, R) {
+                      var alpha = 360 / total * value,
+                          a = (90 - alpha) * Math.PI / 180,
+                          x = halfSize + R * Math.cos(a),
+                          y = halfSize - R * Math.sin(a),
+                          path;
+                      if (total == value) {
+                          path = [["M", halfSize, halfSize - R], ["A", R, R, 0, 1, 1, halfSize - 0.01, halfSize - R]];
+                      } else {
+                          path = [["M", halfSize, halfSize - R], ["A", R, R, 0, +(alpha > 180), 1, x, y]];
                       }
-                    });
+                      return {
+                          path: path,
+                          stroke: outerColor
+                      };
+                  };
 
-                    var data = {
-                      "resultset": resultset,
-                      "metadata":[{
-                        "colIndex":0,
-                        "colType":"String",
-                        "colName":"Categories"
-                      },{
-                        "colIndex":1,
-                        "colType":"Numeric",
-                        "colName":"Value"
-                      }]
-                    };
+                  var outer = r.circle(halfSize, halfSize, outerSize).attr(outerFill);
+                  var second = r.circle(halfSize, halfSize, outerSize * 0.926).attr(innerFill);
+                  var percent = r.path().attr(param).attr({
+                      arc: [0, total, arcSize]
+                  }).animate({
+                      arc: [num, total, arcSize]
+                  }, 1500);
 
-                    pie.setData($.extend(true, {},data),
-                        {crosstabMode: false,
-                         seriesInRows: false});
-                    pie.render();
+                  var third = r.circle(halfSize, halfSize, outerSize * 0.634).attr(outerFill);
+                  var inner = r.circle(halfSize, halfSize, outerSize * 0.567).attr(innerFill);
+
+                  var mainText = r.text(halfSize, halfSize * 0.9, percentage + "%").attr({
+                      "font-size": bigTxtSize,
+                      "font-family": font,
+                      "font-weight": "bold"
+                  });
+                  
+                  var subText = r.text(halfSize * 1.1, halfSize * 1.1, numVsTotal).attr({
+                      "font-size": smallTxtSize,
+                      "font-family": font,
+                      "stroke": outerColor,
+                      "fill": outerColor,
+                      "text-anchor": 'end'
+                  });
+
+                  /*
+                  var descriptionText = r.text(halfSize, size * 0.95, description).attr({
+                      "font-size": smallTxtSize,
+                      "font-family": font,
+                      "stroke": outerColor,
+                      "fill": outerColor
+                  });
+                  */
+                  $('#' + target).append('<p style="text-align:center;color:' + outerColor + ';font-size:2em;margin-top:-1.5em;">' + description + '</p>');
                 }
             };
 
