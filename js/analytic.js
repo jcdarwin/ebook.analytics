@@ -40,7 +40,7 @@ define([
         },
         url: function(){
             //return 'http://localhost:28017/local/analytics/?filter_book=' + this.book;
-            return 'http://localhost:8001/book/' + this.book + '/analytics/';
+            return 'http://localhost:8001/books/' + this.book + '/analytics/';
         }
         });
 

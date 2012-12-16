@@ -70,7 +70,7 @@ def get_books():
     return entity
 
 
-@route('/book/<book>', method='GET')
+@route('/books/<book>', method='GET')
 def get_book(book):
 
     entity = db['books'].find_one({'book': int(book)})
@@ -87,7 +87,7 @@ def get_book(book):
     return entity
 
 
-@route('/book/<book>/analytics/', method='GET')
+@route('/books/<book>/analytics/', method='GET')
 def get_book_analytics(book):
     entity = db['analytics'].find({'book': int(book)})
     if not entity:
@@ -95,7 +95,7 @@ def get_book_analytics(book):
     return entity
 
 
-@route('/book/<book>/analytics/milestones/', method='GET')
+@route('/books/<book>/analytics/milestones/', method='GET')
 def get_book_analytics_milestones(book):
     # We want to return the count of each milestone for this book
     # and express this as a % of the total users.
@@ -124,7 +124,7 @@ def get_book_analytics_milestones(book):
     return entity
 
 
-@route('/book/<book>/analytics/milestone/<milestone>', method='GET')
+@route('/books/<book>/analytics/milestone/<milestone>', method='GET')
 def get_book_analytics_milestones_summary(book, milestone):
 
     # Determine the number of distinct users

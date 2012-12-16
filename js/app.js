@@ -16,9 +16,9 @@ define([
     var Router = Backbone.Router.extend({
         routes: {
             ''                                : 'library',
-            'book/:book'                      : 'book',
-            'book/:book/analytics'            : 'analytics',
-            'book/:book/analytics/milestones' : 'milestones'
+            'books/:book'                      : 'book',
+            'books/:book/analytics'            : 'analytics',
+            'books/:book/analytics/milestones' : 'milestones'
         },
         library: function(){
             var libraryView = new Library.LibraryBooksView();

@@ -17,7 +17,7 @@ define([
     var Books = Backbone.Collection.extend({
         model: Book,
         url: function(id){
-            return 'http://localhost:8001/book/' + id;
+            return 'http://localhost:8001/books/' + id;
         },
         options: {},
         initialize: function(models, options){

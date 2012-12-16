@@ -82,9 +82,9 @@
         <script type="text/template" id="library_book_template">
           <div class="library_book_container">
               <div class="book">
-                <a href="#book/<%= book %>"><img src=<%= "img/" + book + ".jpg" %>></a>
+                <a href="#books/<%= book %>"><img src=<%= "img/" + book + ".jpg" %>></a>
                 <% if (typeof(title) !== 'undefined') { %>
-                    <p class="caption"><a href="#book/<%= book %>"><%= title %></a></p>
+                    <p class="caption"><a href="#books/<%= book %>"><%= title %></a></p>
                 <% } %>
               </div>
             </div>
@@ -103,12 +103,12 @@
         <script type="text/template" id="book_template">
           <div class="book_container">
               <div class="book">
-                <a href="#book/<%= book %>/analytics/milestones"><img src=<%= "img/" + book + ".jpg" %>></a>
+                <a href="#books/<%= book %>/analytics/milestones"><img src=<%= "img/" + book + ".jpg" %>></a>
               </div>
               <div class="book_details">
                 <table>
                 <% if (typeof(title) != 'undefined') { %>
-                    <tr><td>Title:</td><td><a href="#book/<%= book %>/analytics/milestones"><%= title %></a></td></tr>
+                    <tr><td>Title:</td><td><a href="#books/<%= book %>/analytics/milestones"><%= title %></a></td></tr>
                 <% } %>
                 <% if (typeof(author) != 'undefined') { %>
                     <tr><td>Author:</td><td><%= author %></td></tr>

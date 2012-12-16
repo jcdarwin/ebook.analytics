@@ -43,7 +43,7 @@ define([
             });
         },
         url: function(){
-            return 'http://localhost:8001/book/' + this.book + '/analytics/milestone/' + this.milestone;
+            return 'http://localhost:8001/books/' + this.book + '/analytics/milestone/' + this.milestone;
         }
     });
 
@@ -75,7 +75,7 @@ define([
         },
         url: function(){
             //return 'http://localhost:28017/local/analytics/?filter_book=' + this.book;
-            return 'http://localhost:8001/book/' + this.book + '/analytics/milestones/';
+            return 'http://localhost:8001/books/' + this.book + '/analytics/milestones/';
         }
     });
 
